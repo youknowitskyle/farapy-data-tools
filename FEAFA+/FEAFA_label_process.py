@@ -198,7 +198,7 @@ for part in [1, 2, 3]:
         numpy_list[part][j] = label
     np.savetxt(
         list_path_prefix + f"FEAFA_test_label_fold{test_fold}.txt",
-        numpy_list[part][j],
+        numpy_list[part],
         fmt="%f",
         delimiter=" ",
     )
