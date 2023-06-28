@@ -193,9 +193,16 @@ for part in [1, 2, 3]:
         subject = filename[:5]
         frame = filename[6:10]
 
-        label_path = label_path_prefix + subject + ".output/" + f'{frame:0>8}' + ".auw"
-        label = np.loadtxt(label_path, dtype=float)
-        numpy_list[part][j] = label
+        label_path = label_path_prefix + subject + ".output/" + f"{frame:0>8}" + ".auw"
+
+        with open(label_path, "r") as label_file:
+            labels = label_file.readline().split()
+
+        for i, label in enumerate(labels):
+            numpy_list[part][j][i] = float(label)
+
+        print(numpy_list[part][j])
+
     np.savetxt(
         list_path_prefix + f"FEAFA_test_label_fold{test_fold}.txt",
         numpy_list[part][j],
