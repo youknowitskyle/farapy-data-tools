@@ -188,20 +188,17 @@ for file in sorted(os.listdir(data_dir)):
 
 for part in [1, 2, 3]:
     test_fold = 1 if part == 3 else 2 if part == 2 else 3
-    numpy_list[part] = np.zeros((len(frame_list[part]), 24), dtype=int)
+    numpy_list[part] = np.zeros((len(frame_list[part]), 24), dtype=float)
     for j, imageName in enumerate(frame_list[part]):
-        subject = filename[:5]
-        frame = filename[6:10]
+        subject = imageName[:5]
+        frame = imageName[6:10]
 
         label_path = label_path_prefix + subject + ".output/" + f"{frame:0>8}" + ".auw"
-
         with open(label_path, "r") as label_file:
             labels = label_file.readline().split()
 
         for i, label in enumerate(labels):
             numpy_list[part][j][i] = float(label)
-
-        print(numpy_list[part][j])
 
     np.savetxt(
         list_path_prefix + f"FEAFA_test_label_fold{test_fold}.txt",
