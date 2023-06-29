@@ -2,11 +2,13 @@ import os
 import numpy as np
 import pandas as pd
 
-# You nead downloading DISFA including 'ActionUnit_Labels'
+# Images should be face aligned and cropped and stored in the images_path
+#   directory in the following format: '{images_path}/{subject}_{frame}.jpg'
 image_path = "../../FEAFA+/FEAFA-A/processed/"
 list_path_prefix = "../../FEAFA+/FEAFA-A/list/"
 label_path_prefix = "../../FEAFA+/FEAFA-A/"
 
+# Define data split into 3 parts
 part1 = [
     "PV008",
     "PV009",
@@ -145,34 +147,20 @@ part3 = [
 # fold2:  train : part1+part3 test: part2
 # fold3:  train : part2+part3 test: part1
 
-with open(list_path_prefix + "FEAFA_test_img_path_fold3.txt", "w") as f:
-    u = 0
-# loop through subjects
-# loop through frames in image directory, count the amount of valid frames, store valid frame numbers in a set, store frame names in fold.txt file, add to frame list
-# construct an array [frame, au number] = au intensity
-# loop through au number
-# loop through each au number's corresponding label file
-# if frame is in set of valid frame numbers
-# add to numpy array
-# append numpy label array to part1_numpy_list
-# change part1_numpy_list to an np array
-# write part1_numpy_list to test_label_fold.txt
-
 frame_list = {1: [], 2: [], 3: []}
 numpy_list = {1: None, 2: None, 3: None}
 part1_subjects = set(part1)
 part2_subjects = set(part2)
-part3_subjects = set(part3)
 
+# Create/clear test fold image path files
 with open(list_path_prefix + "FEAFA_test_img_path_fold1.txt", "w") as f:
     u = 0
-
 with open(list_path_prefix + "FEAFA_test_img_path_fold2.txt", "w") as f:
     u = 0
-
 with open(list_path_prefix + "FEAFA_test_img_path_fold3.txt", "w") as f:
     u = 0
 
+# Iterate through all images, add to coresponding frame_list, save test fold image path
 data_dir = os.fsencode(image_path)
 for file in sorted(os.listdir(data_dir)):
     filename = os.fsdecode(file)
@@ -186,6 +174,7 @@ for file in sorted(os.listdir(data_dir)):
     with open(list_path_prefix + f"FEAFA_test_img_path_fold{test_fold}.txt", "a+") as f:
         f.write(filename + "\n")
 
+# Get labels for each frame in each part, add to corresponding numpy_list, save test fold labels
 for part in [1, 2, 3]:
     test_fold = 1 if part == 3 else 2 if part == 2 else 3
     numpy_list[part] = np.zeros((len(frame_list[part]), 24), dtype=float)
@@ -207,15 +196,15 @@ for part in [1, 2, 3]:
         delimiter=" ",
     )
 
+# Create/clear train fold image path files
 with open(list_path_prefix + "FEAFA_train_img_path_fold1.txt", "w") as f:
     u = 0
-
 with open(list_path_prefix + "FEAFA_train_img_path_fold2.txt", "w") as f:
     u = 0
-
 with open(list_path_prefix + "FEAFA_train_img_path_fold3.txt", "w") as f:
     u = 0
 
+# Build image path and label lists for each train fold and save to file
 for fold in [1, 2, 3]:
     if fold == 1:
         train_img_list = frame_list[1] + frame_list[2]
