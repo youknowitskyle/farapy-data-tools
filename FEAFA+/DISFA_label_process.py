@@ -6,7 +6,7 @@ import pandas as pd
 #   directory in the following format: '{images_path}/{subject}/{frame}.jpg'
 list_path_prefix = "../../FEAFA+/FEAFA-B/list/"
 label_path_prefix = "../../FEAFA+/FEAFA-B/"
-images_path = "../../DISFA/processed"
+images_path = "/home/kyle/school/farapy/DISFA/processed/left_cam_256"
 
 # Define  data split into 3 parts
 parts = {
@@ -69,7 +69,7 @@ for part in [1, 2, 3]:
         for file in sorted(os.listdir(sub_dir)):
             filename = os.fsdecode(file)
             if "full" in filename:
-                frame_path = f"{subject}/{filename}"
+                frame_path = f"{images_path}/{subject}/{filename}"
                 frame_list[part].append(frame_path)
                 with open(
                     f"{list_path_prefix}DISFA_test_img_path_fold{test_fold}.txt", "a+"
@@ -79,10 +79,10 @@ for part in [1, 2, 3]:
 # Get labels for each frame in each part, add to corresponding numpy_list, save test fold labels
 for part in [1, 2, 3]:
     test_fold = 1 if part == 3 else 2 if part == 2 else 3
-    numpy_list[part] = np.zeros((len(frame_list[part])), dtype=float)
+    numpy_list[part] = np.zeros((len(frame_list[part]), 24), dtype=float)
     for j, imagePath in enumerate(frame_list[part]):
-        subject = imagePath[:5]
-        frame = imagePath[6:10]
+        subject = imagePath[-19:-14]
+        frame = imagePath[-8:-4]
 
         label_path = f"{label_path_prefix}{subject}.output/{frame:0>8}.auw"
         with open(label_path, "r") as label_file:

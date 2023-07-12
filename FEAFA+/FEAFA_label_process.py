@@ -4,7 +4,7 @@ import pandas as pd
 
 # Images should be face aligned and cropped and stored in the images_path
 #   directory in the following format: '{images_path}/{subject}_{frame}.jpg'
-image_path = "../../FEAFA+/FEAFA-A/processed/"
+image_path = "/home/kyle/school/farapy/FEAFA+/FEAFA-A/processed/"
 list_path_prefix = "../../FEAFA+/FEAFA-A/list/"
 label_path_prefix = "../../FEAFA+/FEAFA-A/"
 
@@ -168,7 +168,8 @@ for file in sorted(os.listdir(data_dir)):
 
     part = 1 if subject in part1_subjects else 2 if subject in part2_subjects else 3
     test_fold = 1 if part == 3 else 2 if part == 2 else 3
-
+    
+    filename = image_path + filename
     frame_list[part].append(filename)
 
     with open(list_path_prefix + f"FEAFA_test_img_path_fold{test_fold}.txt", "a+") as f:
@@ -179,8 +180,8 @@ for part in [1, 2, 3]:
     test_fold = 1 if part == 3 else 2 if part == 2 else 3
     numpy_list[part] = np.zeros((len(frame_list[part]), 24), dtype=float)
     for j, imageName in enumerate(frame_list[part]):
-        subject = imageName[:5]
-        frame = imageName[6:10]
+        subject = imageName[-14:-9]
+        frame = imageName[-8:-4]
 
         label_path = label_path_prefix + subject + ".output/" + f"{frame:0>8}" + ".auw"
         with open(label_path, "r") as label_file:
